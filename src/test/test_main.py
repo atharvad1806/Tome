@@ -2,20 +2,33 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from parse_epub import *
+from parse_epub import parse_epub
+from chunker import chunk_chapters
 
 
-def test_parse_epub():
-    import sys
+def test_parse_epub(debug=True):
     chapters = parse_epub("sample_books/test.epub")
-    print(f"Parsed {len(chapters)} chapters/sections")
+    if debug:
+        print(f"Parsed {len(chapters)} chapters/sections")
     for c in chapters[:3]:
         print(f"\n--- {c['title']} (order {c['order']}) ---")
-        print(c["text"][:300])
+        if debug:
+            print(c["text"][:300])
+
+
+def test_chunker(debug=True):
+    chapters = parse_epub("sample_books/test.epub")
+    chunks = chunk_chapters(chapters)
+    if debug:
+        print(f"Created {len(chunks)} chunks from {len(chapters)} chapters")
+        print("\nSample chunk:")
+        print(chunks[0])
 
 
 def run_all_tests():
-    test_parse_epub()
+    debug = False
+    test_parse_epub(debug)
+    test_chunker(debug)
 
 
 if __name__ == "__main__":
