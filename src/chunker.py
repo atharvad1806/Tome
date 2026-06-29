@@ -10,7 +10,7 @@ def chunk_text(text: str, chunk_size: int = 800, overlap: int = 150) -> list[str
     
     while start < len(words):
         end = start + chunk_size
-        chunk = "".join(words[start:end])
+        chunk = " ".join(words[start:end])
         chunks.append(chunk)
         if end >= len(words):
             break

@@ -18,8 +18,8 @@ def parse_epub(filepath: str) -> list[dict]:
         for tag in soup(['script', 'style']):
             tag.decompose()
 
-        text = soup.get_text(separator="\n")
-        text = re.sub(r'\n\s*\n+', '\n', text).strip()
+        text = soup.get_text(separator=" ")
+        text = re.sub(r'\s+', ' ', text).strip()
         
         if len(text) < 50:
             continue
