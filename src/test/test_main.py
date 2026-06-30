@@ -8,7 +8,7 @@ from parse_epub import parse_epub
 from chunker import chunk_chapters
 from vector_store import VectorStore
 
-TEST_BOOK = "sample_books/Animal_Farm_by_George_Orwell.epub"
+TEST_BOOK = "Animal_Farm_by_George_Orwell.epub"
 
 
 def test_parse_epub(debug=True):
@@ -43,18 +43,23 @@ def test_vector_store(debug=True):
     chapters = parse_epub(TEST_BOOK)
     chunks = chunk_chapters(chapters)
     store = VectorStore()
-    store.build(chunks)
-    results = store.search("Does the farmer die?", top_k=2)
+    if os.path.exists(f"book_data/{TEST_BOOK}_embeddings.npy"):
+        print("Loading cached embeddings")
+        store.load(TEST_BOOK)
+    else:
+        store.build(chunks)
+        store.save(TEST_BOOK)
+    results = store.search("Who is Napoleon?")
     for r in results:
-        print(f"[score={r['score']:.3f}] {r['chapter_title']}: {r['text'][:100]}")
+        print(f"[score={r['score']:.3f}] {r['chapter_title']}: {r['text'][:500]}")
 
 
 def run_all_tests():
     debug = True
     # debug = False
-    test_parse_epub(debug)
+    # test_parse_epub(debug)
     # test_chunker(debug=False)
-    # test_vector_store(debug)
+    test_vector_store(debug)
 
 
 if __name__ == "__main__":

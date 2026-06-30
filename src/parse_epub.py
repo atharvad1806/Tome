@@ -5,7 +5,7 @@ import re
 
 
 def parse_epub(filepath: str) -> list[dict]:
-    book = epub.read_epub(filepath)
+    book = epub.read_epub(f"sample_books/{filepath}")
 
     # Step 1: concatenate all document text in file order, with markers
     # we can split on later. We keep paragraph-level granularity by

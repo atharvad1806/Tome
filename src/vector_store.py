@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import voyageai
+import json
 
 VOYAGE_MODEL = "voyage-3.5"
 
@@ -9,6 +10,16 @@ class VectorStore:
         self.client = voyageai.Client(api_key=os.environ["VOYAGE_API_KEY"])
         self.chunks = []
         self.embeddings = None
+
+    def save(self, path: str):
+        np.save(f"book_data/{path}_embeddings.npy", self.embeddings)
+        with open(f"book_data/{path}_chunks.json", "w") as f:
+            json.dump(self.chunks, f)
+
+    def load(self, path: str):
+        self.embeddings = np.load(f"book_data/{path}_embeddings.npy")
+        with open(f"book_data/{path}_chunks.json", "r") as f:
+            self.chunks = json.load(f)
 
     def build(self, chunks, batch_size=100):
         self.chunks = chunks
